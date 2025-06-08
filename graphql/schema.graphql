@@ -1,0 +1,22 @@
+# Input type for user creation
+input CreateUser Input {
+  name: String!
+  email: String!
+  password: String!
+  role: String!
+}
+
+# User type
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  role: String!
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+# Root mutation type
+type Mutation {
+  createUser (input: CreateUser Input!): User @field(resolver: "App\\GraphQL\\Mutations\\User Mutation@createUser ")
+}
