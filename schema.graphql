@@ -1,0 +1,37 @@
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Query {
+    "Mendapatkan semua daftar user."
+    users: [User!]! @all
+
+    "Mendapatkan satu user berdasarkan ID."
+    user(id: ID! @eq): User @find
+}
+
+
+type Mutation {
+    "Membuat user baru."
+    createUser(
+        name: String! @rules(apply: ["required", "string", "max:255"])
+        email: String! @rules(apply: ["required", "email", "unique:users,email"])
+        password: String! @rules(apply: ["required", "string", "min:8"])
+    ): User! @create(model: "App\\Models\\User")
+
+    "Mengupdate data user berdasarkan ID."
+    updateUser(
+        id: ID! @rules(apply: ["required", "exists:users,id"])
+        name: String @rules(apply: ["sometimes", "string", "max:255"])
+        email: String @rules(apply: ["sometimes", "email", "unique:users,email"])
+    ): User @update(model: "App\\Models\\User")
+
+    "Menghapus user berdasarkan ID."
+    deleteUser(
+        id: ID! @rules(apply: ["required", "exists:users,id"])
+    ): User @delete(model: "App\\Models\\User")
+}
