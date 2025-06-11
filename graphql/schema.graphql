@@ -1,22 +1,44 @@
-# Input type for user creation
-input CreateUser Input {
-  name: String!
-  email: String!
-  password: String!
-  role: String!
+
+"Mendefinisikan data sebuah Order"
+type Order {
+    id: ID!
+    user_id: Int!
+    product_id: Int!
+    quantity: Int!
+    total_price: Float!
+    status: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+
+    "Data lengkap pengguna yang terkait dengan order ini"
+    user: User @field(resolver: "App\\GraphQL\\Resolvers\\UserResolver@resolve")
+
+    "Data lengkap produk yang terkait dengan order ini"
+    product: Product @field(resolver: "App\\GraphQL\\Resolvers\\ProductResolver@resolve")
 }
 
-# User type
-type User {
-  id: ID!
-  name: String!
-  email: String!
-  role: String!
-  created_at: DateTime
-  updated_at: DateTime
+"Mendefinisikan query yang tersedia"
+type Query {
+    "Mendapatkan semua order"
+    orders: [Order!]! @all
+
+    "Mendapatkan satu order berdasarkan ID"
+    order(id: ID! @eq): Order @find
 }
 
-# Root mutation type
+"Mendefinisikan mutation yang tersedia"
 type Mutation {
-  createUser (input: CreateUser Input!): User @field(resolver: "App\\GraphQL\\Mutations\\User Mutation@createUser ")
+    "Membuat order baru"
+    createOrder(
+        user_id: Int!
+        product_id: Int!
+        quantity: Int!
+        total_price: Float!
+    ): Order! @create(model: "App\\Models\\Order")
+
+    "Mengupdate status sebuah order"
+    updateOrderStatus(
+        id: ID!
+        status: String!
+    ): Order @update(model: "App\\Models\\Order")
 }
