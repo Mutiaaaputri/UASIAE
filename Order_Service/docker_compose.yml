@@ -1,6 +1,3 @@
-
-version: '3.8'
-
 services:
   app:
     build:
@@ -38,7 +35,7 @@ services:
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
